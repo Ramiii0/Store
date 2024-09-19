@@ -24,7 +24,7 @@ namespace MyStore
                 options.Password.RequireUppercase = false;
                 
             }
-            ).AddEntityFrameworkStores<ApplicationDbCotext>();
+            ).AddEntityFrameworkStores<ApplicationDbCotext>().AddDefaultTokenProviders();
             
             // Add services to the container.
             builder.Services.AddControllersWithViews();

@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyStore.DTO;
 using MyStore.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyStore.Controllers
 {
@@ -71,7 +73,7 @@ namespace MyStore.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Login()
+        public IActionResult Login()
         {
             if (_SignInManager.IsSignedIn(User))
 
@@ -119,12 +121,117 @@ namespace MyStore.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
-        public  IActionResult Profile()
+        [Authorize]
+        public async   Task<IActionResult> Profile()
         {
-            return View();
+            var user = await _UserManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var Userdto = new ProfileDto()
+            {
+                Address = user.Address,
+                Email=user.Email, 
+                PhoneNumber=user.PhoneNumber,
+                FirstName=user.FirstName,
+                LastName=user.LastName
+            };
+            return View(Userdto);
 
         }
+		[Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Profile(ProfileDto profileDto)
+        {
+            if (!ModelState.IsValid)
+            {
+				ViewBag.ErrorMessage = "Please Fill all fields with valid";
+
+			}
+			var user = await _UserManager.GetUserAsync(User);
+			if (user == null)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+            user.FirstName = profileDto.FirstName;
+            user.LastName = profileDto.LastName;
+            user.Email = profileDto.Email;
+            user.PhoneNumber = profileDto.PhoneNumber;
+            user.Address = profileDto.Address;
+            var result = await _UserManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                ViewBag.SuccessMessage = "Profile Updated Successfuly";
+            }
+            else
+            {
+                ViewBag.ErrorMessage = " Error " + result.Errors.First().Description; 
+
+			}
+			return View(profileDto);
+        }
+        [Authorize]
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+		[Authorize]
+        [HttpPost]
+		public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
+		{
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+            var user= await _UserManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var result = await _UserManager.ChangePasswordAsync(user,resetPasswordDto.CurrentPassword,resetPasswordDto.Password);
+            if (result.Succeeded)
+            {
+                ViewBag.SuccessMessage = "password updated";
+            }
+            else
+            {
+				ViewBag.ErrorMessage = " Error " + result.Errors.First().Description;
+			}
+			return View();
+		}
+        public IActionResult ForgotPassword()
+        {
+            if (_SignInManager.IsSignedIn(User))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View() ;
+        }
+        [HttpPost]
+		public async Task<IActionResult> ForgotPassword([Required,EmailAddress]string email)
+		{
+			if (_SignInManager.IsSignedIn(User))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+            ViewBag.Email = email;
+            if (!ModelState.IsValid)
+            {
+                ViewBag.EmailError= ModelState["email"].Errors.First().ErrorMessage;
+            }
+            var user=  await _UserManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                var token= _UserManager.GeneratePasswordResetTokenAsync(user);
+                string ResetUrl = Url.Action("ResetPassword", "Account", new { token }) ?? "Invaild Url";
+                Console.WriteLine(" url link :"+ResetUrl);
+            }ViewBag.SuccessMessage = "please check ur email";
 
 
-    }
+            return View();
+		}
+
+
+	}
 }
