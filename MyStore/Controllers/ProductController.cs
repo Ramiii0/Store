@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MyStore.Data;
 using MyStore.DTO;
 using MyStore.Mappers;
-using MyStore.Models;
+using Store.Models.Models;
 
 namespace MyStore.Controllers
 {

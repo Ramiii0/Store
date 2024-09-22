@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MyStore.DTO;
-using MyStore.Models;
+using Store.Models.Models;
 
 namespace MyStore.Mappers
 {

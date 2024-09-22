@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyStore.Data;
-using MyStore.Models;
+using Store.Models.Models;
 
 namespace MyStore
 {

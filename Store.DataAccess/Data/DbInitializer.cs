@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using MyStore.Models;
+using Store.Models.Models;
 
 namespace MyStore.Data
 {

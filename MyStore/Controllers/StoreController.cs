@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyStore.Data;
 using MyStore.DTO;
-using MyStore.Models;
+using Store.Models.Models;
 
 namespace MyStore.Controllers
 {

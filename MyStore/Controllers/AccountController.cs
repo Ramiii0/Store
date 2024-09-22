@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyStore.DTO;
-using MyStore.Models;
+using Store.Models.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace MyStore.Controllers

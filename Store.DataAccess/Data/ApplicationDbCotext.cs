@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using MyStore.Models;
+using Store.Models.Models;
 
 namespace MyStore.Data
 {
@@ -11,5 +11,6 @@ namespace MyStore.Data
             
         }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Order> Orders { get; set; }
     }
 }

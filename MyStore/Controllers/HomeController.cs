@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MyStore.Data;
-using MyStore.Models;
+using Store.Models.Models;
 using System.Diagnostics;
 
 namespace MyStore.Controllers
