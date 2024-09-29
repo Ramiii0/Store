@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyStore.Data;
+using Store.DataAccess.Interface;
+using Store.DataAccess.Repository;
 using Store.Models.Models;
 
 namespace MyStore
@@ -25,6 +27,7 @@ namespace MyStore
                 
             }
             ).AddEntityFrameworkStores<ApplicationDbCotext>().AddDefaultTokenProviders();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
             
             // Add services to the container.
             builder.Services.AddControllersWithViews();
