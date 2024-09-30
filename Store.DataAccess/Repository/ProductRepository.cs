@@ -4,6 +4,7 @@ using MyStore.Data;
 using Store.DataAccess.Interface;
 using Store.Models.Models;
 using Microsoft.AspNetCore.Hosting;
+using Humanizer;
 
 
 
@@ -13,6 +14,7 @@ namespace Store.DataAccess.Repository
     public class ProductRepository : IProductRepository
     {
         private readonly ApplicationDbCotext _db;
+
        //  private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly int pagesize = 5;
 
@@ -114,20 +116,19 @@ namespace Store.DataAccess.Repository
             return product;
         }
 
-       public void Add(Product product, IFormFile? file)
+       
+
+        public void Add(Product product)
         {
-           /* if (file != null)
-            {
-                //string wwwRootPath = _webHostEnvironment.WebRootPath;
-                string filename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-             //   string productPath = Path.Combine(wwwRootPath, @"products");
-                using (var filestream = new FileStream(Path.Combine(productPath, filename), FileMode.Create))
-                {
-                    file.CopyTo(filestream);
-                };
-                product.Imagefile = filename;
-            }*/
-            
+            throw new NotImplementedException();
+        }
+
+        public async Task Delete(int id)
+        {
+            var product= await _db.Products.FindAsync(id);
+            if (product == null) { return; }
+            _db.Products.Remove(product);
+          await  _db.SaveChangesAsync();
 
         }
     }

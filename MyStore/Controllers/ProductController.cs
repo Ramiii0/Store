@@ -65,6 +65,7 @@ namespace MyStore.Controllers
                     Product.Imagefile =  filename;
                 }
                 await _context.Products.AddAsync(Product);
+                //_productRepository.Add(Product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -142,13 +143,9 @@ namespace MyStore.Controllers
         }
         public async Task<IActionResult> Delete(int id)
         {
-            var product= await _productRepository.GetOne(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
+            
+
+            await _productRepository.Delete(id);
             return RedirectToAction("Index");
         }
 

@@ -28,7 +28,8 @@ namespace MyStore
             }
             ).AddEntityFrameworkStores<ApplicationDbCotext>().AddDefaultTokenProviders();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
-            
+            builder.Services.AddScoped<IStoreRepository, StoreRepository>();
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
            

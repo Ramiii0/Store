@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyStore.Data;
 using MyStore.DTO;
+using Store.DataAccess.Interface;
+using Store.DataAccess.Repository;
 using Store.Models.Models;
 
 namespace MyStore.Controllers
@@ -12,51 +14,19 @@ namespace MyStore.Controllers
     {
         
         private readonly ApplicationDbCotext _context;
+        private readonly IStoreRepository _repository;
         private readonly int pagesize = 8;
-        public StoreController(ApplicationDbCotext cotext)
+        public StoreController(ApplicationDbCotext cotext, IStoreRepository repository)
         {
             _context = cotext;
+            _repository = repository;
             
         }
-        public IActionResult Index(int pageIndex,string? search,string brand,string category,string sort)
+        public async Task<IActionResult> Index(int pageIndex,string? search,string brand,string category,string sort)
         {
-            IQueryable<Product> query =  _context.Products;
-           
-            if (search != null && search.Length >0)
-            {
-                query = query.Where(x => x.Name.Contains(search));
-            }
-            if (brand != null && brand.Length > 0)
-            {
-                query = query.Where(x => x.Brand.Contains(brand));
-            }
-            if (category != null && category.Length > 0)
-            {
-                query = query.Where(x => x.Category.Contains(category));
-            }
-            if (pageIndex < 1)
-            {
-                pageIndex = 1;
-
-            }
-            if (sort == "price_asc")
-            {
-                query = query.OrderBy(x => x.Price);
-            } else if (sort =="price_desc")
-            {
-                query = query.OrderByDescending(x => x.Price);
-
-            } else
-            {
-                query = query.OrderByDescending(x => x.CreatedAt);
-            }
-
-            decimal count = query.Count();
-            int totalpages = (int)Math.Ceiling(count / pagesize);
-            query = query.Skip((pageIndex - 1) * pagesize).Take(pagesize);
-            var products = query.ToList();
+            var products= await _repository.GetAll(pageIndex,search,brand,category,sort);
             ViewData["PageIndex"] = pageIndex;
-            ViewData["TotalPages"] = totalpages;
+            ViewData["TotalPages"] = StoreRepository.TotalPages;
             ViewData["Search"] = search ?? "";
             ViewBag.Product = products;
             var searchModel = new StoreVm()
@@ -70,9 +40,9 @@ namespace MyStore.Controllers
             };
             return View(searchModel);
         }
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var product= _context.Products.Find(id);
+            var product= await _repository.GetOne(id);
             if (product == null)
             {
                 return View("Error");

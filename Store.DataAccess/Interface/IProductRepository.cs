@@ -12,7 +12,8 @@ namespace Store.DataAccess.Interface
     {
         Task<List<Product>> GetAll(int pageindex, string? search, string? column, string? orderBy);
         Task<Product> GetOne(int id);
-        void Add(Product product, IFormFile? file);
+        Task Delete(int id);
+        void Add(Product product);
         
 
 
